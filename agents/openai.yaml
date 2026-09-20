@@ -1,0 +1,4 @@
+interface:
+  display_name: "Contract-Driven Dev Loop"
+  short_description: "User-assigned model roles and exact-SHA development reviews"
+  default_prompt: "Use $contract-driven-dev-loop to coordinate a user-directed development task and its exact-SHA review."
