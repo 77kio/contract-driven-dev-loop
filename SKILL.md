@@ -20,11 +20,13 @@ Coordinate a user-defined development and review process. This skill does not ch
 
 Use an existing user-provided contract as-is when it is actionable. Otherwise, ask the user-designated planner to produce one before implementation. A useful contract records:
 
-- task ID, domain, workspace, branch, base SHA, and dependencies;
+- task ID, domain, workspace, the user-approved branch/worktree strategy and target(s), source/base SHA(s), and dependencies;
 - the assigned implementer and reviewer, if any;
 - allowed and forbidden paths;
 - observable behavior or deliverable and acceptance checks;
 - required commit, push, review, integration, and reporting steps.
+
+The branch/worktree strategy must be selected by the user or an active user-approved contract. It may target the verified current branch, a separate branch/worktree, or multiple parallel branches/worktrees. Do not infer a separate line from the task domain, including UI work.
 
 Do not invent a feature, semantic rule, dependency, or next task. If a missing decision blocks safe implementation, route the question to its explicitly designated owner; if no owner is designated, ask the user. Keep distinct tasks independent unless a contract declares a dependency.
 
@@ -32,7 +34,7 @@ Do not invent a feature, semantic rule, dependency, or next task. If a missing d
 
 For Git work, identify the actual repository and worktree, inspect status, current branch, HEAD, and configured remote/upstream. Follow any additional mechanical checks required by the active project contract, such as fetching before comparing remote state. Record the verified base SHA. Do not infer a path or branch from old conversation context.
 
-Stop before writing if the repository, branch, base, or ownership boundary cannot be verified, or if the active contract forbids the current target. Preserve user-owned changes and stage only authorized paths. Keep concurrent writers on disjoint paths or isolated worktrees.
+Stop before writing if the repository, branch, base, or ownership boundary cannot be verified, or if the active contract forbids the current target. A verified current branch is a valid target when the user or active contract authorizes it. Do not refuse authorized work on that branch merely because no separate branch or worktree was requested, including for UI work. If the required strategy or target is unresolved, ask before writing. Preserve user-owned changes and stage only authorized paths. Keep concurrent changes on disjoint paths and use isolated worktrees for parallel writers; allow only one writer per physical worktree at a time, or serialize the work.
 
 ## Implement and validate within scope
 
@@ -48,9 +50,13 @@ Use only the reviewer designated by the user or active contract. Send the exact 
 
 For revisions, keep the same task ID unless the designated planner explicitly replans it. Apply only the revision guidance, create a new commit, push if authorized, and request review of that exact SHA. A task waiting for review does not block unrelated work without a declared dependency or file conflict.
 
-## Isolated UI work and integration
+## Branch/worktree strategy and integration
 
-When a contract requires a separate UI line, create it from the exact approved base SHA and keep it within UI presentation paths. Do not change shared runtime or mount points until an explicit integration contract allows them. Before integration, review the exact program, UI, and UI-base SHAs for ownership boundaries and conflicts. Merge only to the named target after explicit authorization, push the merged SHA, and obtain the required merged-head review. Clean up only the specifically named temporary worktree and branch after the final gate passes; never use a broad cleanup operation against unrelated worktrees.
+Use only the branch/worktree strategy selected by the user or active user-approved contract. A task may use the verified current branch, a separate branch/worktree, or multiple parallel branches/worktrees. UI work does not imply a separate UI line. If the strategy or required target is missing or ambiguous, ask before writing; do not infer isolation from the task domain or from the absence of a separate-branch request.
+
+For each separate or parallel line, the contract must name its source/base SHA, target branch/worktree, domain and file ownership, allowed paths, and dependencies. A multi-line contract must also name the merge direction, integration target, and required integration reviews. Create separate lines only from their named source/base SHAs. Keep parallel writers in separate worktrees, with disjoint ownership and allowed paths.
+
+For a separate UI line, keep work within UI presentation paths. Do not change shared runtime or mount points until an explicit integration contract allows them. Before integrating lines, review the exact participating branch SHAs and their base SHAs for ownership boundaries and conflicts. Merge only to the named target after explicit authorization, push the merged SHA, and obtain the required merged-head review. Clean up only specifically named temporary worktrees and branches after the final gate passes; never use a broad cleanup operation against unrelated worktrees.
 
 ## Monitor state and report evidence
 
